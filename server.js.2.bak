@@ -1,0 +1,86 @@
+const express = require('express');
+const app = express();
+const options = {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+};
+const server = require('http').Server(app);
+const io = require('socket.io')(server, options);
+const cors = require('cors');
+const api = require("./api");
+const socketEvents = require("./socket/index.js");
+
+app.use(cors());
+
+app.use(express.static('js'));
+
+app.use(api);
+
+socketEvents(io);
+
+/*
+app.get('/ui', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+
+app.get('/item', (req, res, next) => {
+  const item = {
+    id: 1,
+    name: "item_1"
+  };
+
+  res.send({
+    data: arr
+  });
+});
+
+app.get('/items', (req, res, next) => {
+  let arr = [];
+  for (let i = 0; i < 30; i++) {
+    const id = Math.round(Math.random() * 100000);
+    arr.push({
+      id: id,
+      name: `name-${id}`
+    });
+  }
+
+  res.send({
+    data: arr
+  });
+});
+*/
+
+/*
+io.on('connection', socket => {
+  console.log('a user connected');
+  if (!global._session_) global._session_ = { user: 0 };
+
+  const clientsCount = socket.client.conn.server.clientsCount;
+  console.log(`### Clients Count: ${clientsCount}`);
+
+  io.emit('clientsCount', clientsCount);
+
+  socket.on('joinRoom', id => {
+    socket.join(id, () => {
+      console.log(`joining ${id}`);
+      io.to(id).emit('joinRoom', id);
+    });
+  });
+
+  socket.on('chat message', (id, msg) => {
+    console.log(`id: ${id}, msg: ${msg}`);
+    io.to(id).emit('chat message', msg);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
+*/
+
+server.listen(3000, () => {
+  console.log('listening on *:3000');
+});
